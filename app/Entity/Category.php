@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
+namespace App\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
@@ -16,16 +19,16 @@ use Symfony\Component\Console\Helper\Table;
 #[Entity, Table('categories')]
 class Category
 {
-    #[Id, Column(options: ['unsigned' => true])]
+    #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
     private int $id;
     #[Column]
     private string $name;
 
     #[Column(name: 'created_at')]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[Column(name: 'updated_at')]
-    private DateTime $updatedAd;
+    private \DateTime $updatedAd;
 
     #[OneToMany(mappedBy: 'transaction', targetEntity: Transaction::class)]
     private Collection $transactions;
@@ -54,21 +57,21 @@ class Category
         return $this;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAd(): DateTime
+    public function getUpdatedAd(): \DateTime
     {
         return $this->updatedAd;
     }
-    public function setUpdatedAd(DateTime $updatedAd): self
+    public function setUpdatedAd(\DateTime $updatedAd): self
     {
         $this->updatedAd = $updatedAd;
         return $this;

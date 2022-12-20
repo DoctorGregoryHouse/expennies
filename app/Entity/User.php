@@ -2,20 +2,28 @@
 
 declare(strict_types=1);
 
+namespace App\Entity;
+
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\PreUpdate;
 use Symfony\Component\Console\Helper\Table;
 
 
-#[Entity, Table('users')]
+#[Entity, Table('users'), HasLifecycleCallbacks]
 class User
 {
 
-    #[Id, Column(options: ['unsigned' => true])]
+    #[Id, Column(options: ['unsigned' => true]), GeneratedValue]
     private int $id;
 
     #[Column]
@@ -28,10 +36,10 @@ class User
     private string $password;
 
     #[Column(name: 'created_at')]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[Column(name: 'updated_at')]
-    private DateTime $updatedAd;
+    private \DateTime $updatedAd;
 
     #[OneToMany(mappedBy: 'user', targetEntity: Transaction::class)]
     private Collection $transactions;
@@ -43,6 +51,15 @@ class User
     {
         $this->categories = new ArrayCollection();
         $this->transactions = new ArrayCollection();
+    }
+
+    #[PrePersist, PreUpdate]
+    public function set_timestamps(LifecycleEventArgs $args)
+    {
+        if (!isset($this->createdAt)) {
+            $this->createdAt = new DateTime();
+        }
+        $this->updatedAd = new DateTime();
     }
 
     public function getId(): int
@@ -80,21 +97,21 @@ class User
         return $this;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
         return $this;
     }
 
-    public function getUpdatedAd(): DateTime
+    public function getUpdatedAd(): \DateTime
     {
         return $this->updatedAd;
     }
-    public function setUpdatedAd(DateTime $updatedAd): self
+    public function setUpdatedAd(\DateTime $updatedAd): self
     {
         $this->updatedAd = $updatedAd;
         return $this;
